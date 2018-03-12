@@ -14,6 +14,7 @@ const makeDir = (name) => new Promise((resolve, reject) => {
     // mkdirp(name, err => err ? reject(err) : resolve());+*
 });
 
+// 异步地追加数据到一个文件，如果文件不存在则创建文件
 const appendFile = (file, contents) => new Promise((resolve, reject) => {
     fs.appendFile(file, contents, 'utf8', err => err ? reject(err) : resolve());
 });

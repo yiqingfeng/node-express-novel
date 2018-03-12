@@ -34,6 +34,7 @@ class Novel {
 
     // 获取目录信息
     getCatelog(url, name) {
+        const t = this;
         return this.get(url)
             .then(res => {
                 return new Promise((resolve) => {
@@ -59,7 +60,56 @@ class Novel {
                 });
             })
             .then((data) => {
-                console.log(data[0]);
+                return t.getChapters(data, name);
+            })
+            .catch(err => {
+                console.debug(err);
+            });
+    }
+
+    // 获取多有小说章节，并下载保存
+    getChapters(data, name, index) {
+        const t = this;
+        const len = data.length - 1;
+        const curt = index || 0;
+        // 可以依据 title 过滤部分章节
+        if (len > curt) {
+            return this.getChapter(data[curt].link, data[curt].title)
+                .then(text => {
+                    fs
+                        .appendFile(`${fs.distPath}/${name}.txt`, text)
+                        .then(() => {
+                            console.log(`${data[curt].title}下载完毕`);
+                            t.getChapters(data, name, curt + 1);
+                        });
+                });
+        } else {
+            return this.getChapter(data[curt].link, data[curt].title)
+                .then(text => {
+                    fs
+                        .appendFile(`${fs.distPath}/${name}.txt`, text)
+                        .then(() => {
+                            console.log(`${data[curt].title}下载完毕`);
+                            console.log(`${name}下载完毕`);
+                        });
+                });
+        }
+    }
+    // 获取小说章节
+    getChapter(url, name) {
+        return this.get(url)
+            .then(res => {
+                return new Promise(resolve => {
+                    let text = res.split('<!--go-->')[1];
+                    text = text.split('<!--over-->')[0];
+                    text = text.replace(/<BR>/g, '');
+                    text = text.replace(/(<br>|<br \/>)/g, '\n');
+                    text = text.replace(/&nbsp;/g, ' ');
+                    text = text.replace('天才壹秒記住『愛♂去÷小?說→網wWw.AiQuxS.Com』，為您提供精彩小說閱讀。\n', '');
+                    text = text.replace('手机用户请浏览m.aiquxs.com阅读，更优质的阅读体验。', '');
+                    text = `${name}\n\n${text}\n\n`;
+                    resolve && resolve(text);
+                });
             });
     }
 
