@@ -4,6 +4,7 @@
 
 const http = require('http');
 const iconv = require('iconv-lite');
+const colors = require('./colors');
 
 exports.get = function get(url, type) {
     return new Promise((resolve, reject) => {
@@ -18,7 +19,7 @@ exports.get = function get(url, type) {
                 resolve && resolve(html);
             });
         }).on('error', e => {
-            console.debug(e);
+            console.log(`${colors.bgRed('Error:')} 请求出错，url: ${colors.blue(url)}}`, e);
             reject && reject(e);
         });
     });

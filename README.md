@@ -36,10 +36,33 @@ getChapters(data, name, index) {
 }
 ```
 
-- 通过拆分，开启多个时间，同时执行多个下载任务。这样下载时间会优化若干倍。
+- 通过拆分组，开启多个时间，同时执行多个下载任务。这样下载时间会优化若干倍。
 
 ```javascript
-getChapters(data, name, index) {
-
+createchaptersFast(data) {
+    const step = 5;
+    const len = Math.floor(data.length / step);
+    const p = [];
+    let start, end, list;
+    for (let i = 0; i < step; i++) {
+        start = i * len;
+        if (step !== i + 1) {
+            end = (i + 1) * len;
+            list = data.slice(start, end);
+        } else {
+            list = data.slice(start);
+        }
+        p.push(this.getChapters(list, `temp/${t.name}-${i}`));
+    }
+    return Promise.all(p)
+        .then(() => {
+            // 合并生成的章节
+        })
 }
+```
+
+- 优先下载章节文件，之后逐步合并
+
+```javascript
+
 ```

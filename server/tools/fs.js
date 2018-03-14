@@ -51,5 +51,6 @@ module.exports = {
     readFile,
     appendFileSync,
     readFileSync,
-    distPath: path.join(__dirname, '../', 'dist'),
+    distPath: path.join(__dirname, '../../', 'dist'),
+    tempPath: path.join(__dirname, '../../', 'temp')
 };
