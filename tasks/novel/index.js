@@ -20,3 +20,5 @@ class Novel {
         }
     }
 }
+
+module.exports = Novel;

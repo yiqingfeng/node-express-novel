@@ -3,7 +3,6 @@
  */
 const fs = require('fs');
 const path = require('path');
-const iconv = require('iconv-lite');
 
 const writeFile = (file, contents) => new Promise((resolve, reject) => {
     fs.writeFile(file, contents, 'utf8', err => err ? reject(err) : resolve());
@@ -53,7 +52,4 @@ module.exports = {
     appendFileSync,
     readFileSync,
     distPath: path.join(__dirname, '../', 'dist'),
-    decode(buffer, type) {
-        return iconv.decode(buffer, type);
-    }
 };
