@@ -64,5 +64,39 @@ createchaptersFast(data) {
 - 优先下载章节文件，之后逐步合并
 
 ```javascript
+// 下载小说章节
+downloadChapters(data, tempPath, downloadCb) {
+    const t = this;
+    const len = data.length;
+    let curt = 0;
+    data.forEach((chapter, index) => {
+        t.getChapter(chapter.link, chapter.title)
+            .then(text => {
+                fs.writeFile(`${tempPath}/${index}.txt`, text)
+                    .then(() => {
+                        curt++;
+                        console.log(`${chapter.title}下载完毕`);
+                        if (curt === len) {
+                            downloadCb && downloadCb();
+                        }
+                    });
+            });
+    });
+}
 
+// 合并暂存区的章节文件
+mergeChapters(tempPath, step, getName = index => `${index}.txt`, curt = 0) {
+    const t = this;
+    fs.readFile(`${tempPath}/${getName(curt)}`)
+        .then(text => {
+            fs.appendFile(`${t.distPath}/${t.name}.txt`, text)
+                .then(() => {
+                    if (curt < step - 1) {
+                        t.mergeChapters(tempPath, step, getName, curt + 1);
+                    } else {
+                        console.log(`${colors.blue('章节合并完毕')}`);
+                    }
+                });
+        });
+}
 ```

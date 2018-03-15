@@ -8,5 +8,3 @@ new Novel({
     url: '/read/38/38721/index.html',
     name: '玄界之门',
 })
-
-

@@ -26,6 +26,11 @@ const makeDir = (dir) => new Promise((resolve, reject) => {
     });
 });
 
+// 删除指定目录下的文件夹及所有文件
+// const rmDir = path => {
+
+// }
+
 // 异步地追加数据到一个文件，如果文件不存在则创建文件
 const appendFile = (file, contents) => new Promise((resolve, reject) => {
     fs.appendFile(file, contents, 'utf8', err => err ? reject(err) : resolve());
@@ -39,7 +44,7 @@ const readFile = file => new Promise((resolve, reject) => {
     fs.readFile(file, 'utf8', (err, data) => err ? reject(err) : resolve(data));
 });
 
-const readFileSync = file => new Promise((resolve, reject) => {
+const readFileSync = file => new Promise(resolve => {
     const article = fs.readFileSync(file, 'utf8');
     resolve(article);
 });

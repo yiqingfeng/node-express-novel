@@ -61,7 +61,11 @@ class Novel {
                         fs
                             .makeDir(`${fs.tempPath}/${t.name}`)
                             .then(() => {
-                                t.downloadPriority(t.filterChapter(data).slice(0, 10), `${fs.tempPath}/${t.name}`);
+                                const chapters = t.filterChapter(data).slice(0, 10);
+                                t.downloadChapters(chapters, `${fs.tempPath}/${t.name}`, () => {
+                                    console.log('下载完毕');
+                                    t.mergeChapters(`${fs.tempPath}/${t.name}`, chapters.length);
+                                });
                             });
                     })
                     .catch(err => {
@@ -145,40 +149,45 @@ class Novel {
         }
     }
 
-    // 快速下载书籍
-    createchaptersFast(data) {
-        const step = 5;
-        const len = Math.floor(data.length / step);
-        const p = [];
-        let start, end, list;
-        for (let i = 0; i < step; i++) {
-            start = i * len;
-            if (step !== i + 1) {
-                end = (i + 1) * len;
-                list = data.slice(start, end);
-            } else {
-                list = data.slice(start);
-            }
-            p.push(this.getChapters(list, `temp/${t.name}-${i}`));
-        }
-        return Promise.all(p)
-            .then(() => {
-                // 合并生成的章节
-            })
+    // 下载小说章节
+    downloadChapters(data, tempPath, downloadCb) {
+        const t = this;
+        const len = data.length;
+        let curt = 0;
+        data.forEach((chapter, index) => {
+            t.getChapter(chapter.link, chapter.title)
+                .then(text => {
+                    fs.writeFile(`${tempPath}/${index}.txt`, text)
+                        .then(() => {
+                            curt++;
+                            console.log(`${chapter.title}下载完毕`);
+                            if (curt === len) {
+                                downloadCb && downloadCb();
+                            }
+                        });
+                });
+        });
     }
 
-    // 优先下载章节
-    downloadPriority(data, path) {
+    // 合并暂存区的章节文件
+    mergeChapters(tempPath, step, getName = index => `${index}.txt`, curt = 0) {
         const t = this;
-        return Promise.all(data.forEach((chapter, index) => {
-            return t.getChapter(chapter.link, chapter.title).then(text => {
-                fs
-                    .writeFile(`${path}/${index}.txt`, text)
+        fs.readFile(`${tempPath}/${getName(curt)}`)
+            .then(text => {
+                fs.appendFile(`${t.distPath}/${t.name}.txt`, text)
                     .then(() => {
-                        console.log(`${chapter.title}下载完毕`);
+                        if (curt < step - 1) {
+                            t.mergeChapters(tempPath, step, getName, curt + 1);
+                        } else {
+                            console.log(`${colors.blue('章节合并完毕')}`);
+                        }
                     });
             });
-        }));
+    }
+
+    // 清除指定目录
+    clearDir(tempPath) {
+
     }
 }
 
