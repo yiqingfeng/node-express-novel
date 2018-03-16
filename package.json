@@ -20,6 +20,7 @@
     "iconv-lite": "^0.4.19",
     "lodash": "^4.17.5",
     "morgan": "~1.9.0",
+    "progress": "^2.0.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {

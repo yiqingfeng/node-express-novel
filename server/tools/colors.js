@@ -3,6 +3,7 @@
  * http://justnewbee.github.io/frontend/2014/12/17/nodejs-colorful-console.html
  * https://www.npmjs.com/package/colors
  */
+const ProgressBar = require('progress');
 
 module.exports = {
     /**
@@ -66,4 +67,13 @@ module.exports = {
     bgWhite(str) {
         return `\x1b[47m${str}\x1b[0m`;
     },
+
+    /**
+     * 其他控制台的使用
+     */
+    progress(total, tokens) {
+        return new ProgressBar(tokens, {
+            total,
+        });
+    }
 }
