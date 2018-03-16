@@ -37,6 +37,7 @@ class Novel {
                 return fs.makeDir(`${fs.tempPath}/${t.name}`)
                     .then(() => {
                         const chapters = t.filterChapter(data);
+                        console.log(`开始下载${t.name}`);
                         t.downloadChapters(chapters, `${fs.tempPath}/${t.name}`, () => {
                             console.log(`${t.name}下载完毕`);
                             const filePath = `${t.distPath}/${t.name}.txt`;
@@ -160,6 +161,7 @@ class Novel {
                             t.mergeChapters(tempDir, distPath, step, getName, curt + 1);
                         } else {
                             console.log(`${colors.blue('章节合并完毕')}`);
+                            t.clearDir(tempDir);
                         }
                     });
             })
@@ -168,7 +170,7 @@ class Novel {
 
     // 清除指定目录
     clearDir(tempDir) {
-
+        fs.rmDirSync(tempDir);
     }
 }
 

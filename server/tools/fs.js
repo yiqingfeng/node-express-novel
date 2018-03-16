@@ -72,8 +72,8 @@ const hasDir = dir => new Promise((resolve, reject) => {
     })
 });
 // 不存在指定目录则新建
-const makeDir = (dir) => new Promise((resolve, reject) => {
-    hasDir.then(exists => {
+const makeDir = dir => new Promise((resolve, reject) => {
+    hasDir(dir).then(exists => {
         if (exists) {
             resolve && resolve();
         } else {
@@ -85,31 +85,18 @@ const makeDir = (dir) => new Promise((resolve, reject) => {
 const rmEmptyDir = path => new Promise((resolve, reject) => {
     fs.rmdir(path, err => err ? reject && reject(err) : resolve && resolve());
 });
-// 删除指定目录下的所有文件及其本身 (异步)
-const rmDir = path => new Promise((resolve, reject) => {
-    // 删除指定目录下的所有文件
-    const rmAllFiles = path => {
-
-    };
-    hasDir.then(exists => {
-        if (!exists) {
-            resolve && resolve();
+const rmDirSync = path => {
+    if (!fs.statSync(path).isDirectory()) return;
+    fs.readdirSync(path).forEach(file => {
+        const tempPath = `${path}/${file}`;
+        if (fs.statSync(tempPath).isDirectory()) {
+            rmDirSync(tempPath);
         } else {
-            fs.readdir(path, 'utf8', (err, files) => {
-                const tempFiles = [];
-                const tempDirs = [];
-                files.forEach(file => {
-                    if (fs.statSync(`${path}/${file}`).isDirectory()) {
-                        tempDirs.push(`${path}/${file}`);
-                    } else {
-                        tempFiles.push(`${path}/${file}`);
-                    }
-                });
-                rmFiles()
-            })
+            rmFileSync(tempPath);
         }
-    }).catch(err => reject && reject(err));
-});
+    });
+    fs.rmdirSync(path);
+};
 
 module.exports = {
     distPath: path.join(__dirname, '../../', 'dist'),
@@ -128,4 +115,5 @@ module.exports = {
     hasDir,
     makeDir,
     rmEmptyDir,
+    rmDirSync,
 };
