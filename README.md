@@ -100,3 +100,7 @@ mergeChapters(tempPath, step, getName = index => `${index}.txt`, curt = 0) {
         });
 }
 ```
+
+### 单个爬取失败处理
+
+在爬取过程，可能会出现某些请求失败的情况，这是可以进行设置一个请求次数显示，使得请求多请求几次，确保其能完成。

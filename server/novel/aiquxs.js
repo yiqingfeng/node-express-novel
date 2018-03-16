@@ -61,7 +61,7 @@ class Novel {
                         fs
                             .makeDir(`${fs.tempPath}/${t.name}`)
                             .then(() => {
-                                const chapters = t.filterChapter(data).slice(0, 10);
+                                const chapters = t.filterChapter(data);
                                 t.downloadChapters(chapters, `${fs.tempPath}/${t.name}`, () => {
                                     console.log('下载完毕');
                                     t.mergeChapters(`${fs.tempPath}/${t.name}`, chapters.length);
