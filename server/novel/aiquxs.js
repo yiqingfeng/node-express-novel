@@ -24,10 +24,10 @@ class Novel {
         return http.get(url)
             .then(res => {
                 return new Promise(resolve => {
-                    const { text, chapters } = t.formatCatelog(res, url);
+                    const { chapters } = t.formatCatelog(res, url);
                     fs.makeDir(t.distPath)
                         .then(() => {
-                            t.createCatelog(text);
+                            // t.createCatelog(text);
                             resolve && resolve(chapters);
                         })
                         .catch(t.showError);
@@ -55,11 +55,11 @@ class Novel {
     // 记录目录信息
     createCatelog(text) {
         const t = this;
-        // console.log(`开始写入${t.name}目录`);
+        console.log(`开始写入${t.name}目录`);
         fs.writeFile(`${t.distPath}/${t.name}目录.txt`, text)
-            // .then(() => {
-            //     console.log(`${t.name}目录生成完毕`);
-            // })
+            .then(() => {
+                console.log(`${t.name}目录生成完毕`);
+            })
             .catch(err => {
                 console.log(err);
             });

@@ -4,10 +4,6 @@ const routers = [
         component: require('./components/home'),
     },
     {
-        path: '/users',
-        component: require('./components/users'),
-    },
-    {
         path: '/novel',
         component: require('./components/novel'),
     }
