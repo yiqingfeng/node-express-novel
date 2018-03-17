@@ -56,12 +56,12 @@ server.on('error', (err) => {
     switch (err.code) {
         case 'EACCES':
             console.error(`${bind} requires elevated privileges`);
-            process.exit(1);
-            break;
+            process.exit(1); // eslint-disable-line no-process-exit
+            break; // eslint-disable-line no-unreachable
         case 'EADDRINUSE':
             console.error(`${bind} is already in use`);
-            process.exit(1);
-            break;
+            process.exit(1); // eslint-disable-line no-process-exit
+            break; // eslint-disable-line no-unreachable
         default:
             throw err;
     }

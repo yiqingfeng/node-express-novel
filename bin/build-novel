@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+require('shelljs/global');
+
+/* eslint-disable no-undef */
+
+cd('third/novel');
+
+// 编译web文件
+exec('npm run build');
+
+// 清空旧文件
+rm('-rf', '../../webs/novel/*');
+
+// 复制新文件
+cp('-rf', './dist/*', '../../webs/novel/');
+

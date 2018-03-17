@@ -1,0 +1,3 @@
+[submodule "third/novel"]
+	path = third/novel
+	url = https://github.com/yiqingfeng/node-express-novel-web.git
