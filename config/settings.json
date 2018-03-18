@@ -2,10 +2,11 @@
     "node": {
         "port": 3000
     },
-    "mysql": {
+    "sqlConfig": {
+        "connectionLimit": 10,
         "host": "localhost",
         "user": "root",
         "password": "admin",
-        "database": "test"
+        "database": "novel_web"
     }
 }

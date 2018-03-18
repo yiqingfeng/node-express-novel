@@ -4,9 +4,7 @@
 const URL = require('url');
 const cheerio = require('cheerio');
 
-const fs = require('../tools/fs');
-const http = require('../tools/http');
-const colors = require('../tools/colors');
+const { fs, http, colors } = require('../../tools/index');
 
 class Novel {
     constructor(options) {
