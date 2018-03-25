@@ -20,7 +20,7 @@ module.exports = {
     getAllBookSource() {
         return this.getConnection().then(connection => {
             return new Promise((resolve, reject) => {
-                connection.query('SELECT * FROM book_source WHERE id != 1 ORDER BY id DESC', (err, results) => {
+                connection.query('SELECT * FROM book_source ORDER BY id DESC', (err, results) => {
                     connection.release(); // And done with the connection.
                     if (err) {
                         reject && reject(err);
@@ -30,5 +30,43 @@ module.exports = {
                 })
             });
         });
-    }
+    },
+    getALlBooks() {
+        return this.getConnection().then(connection => {
+            return new Promise((resolve, reject) => {
+                connection.query('SELECT b.name, b.author, b.url, b.update_time, b.remark, s.name as source FROM book as b LEFT JOIN book_source as s ON b.source_id = s.id ORDER BY b.id DESC', (err, results) => {
+                    connection.release(); // And done with the connection.
+                    if (err) {
+                        reject && reject(err);
+                    } else {
+                        resolve && resolve(results);
+                    }
+                })
+            });
+        });
+    },
+    addBook(data) {
+        const { name, author, url, source_id, remark } = data;
+        const book = {
+            name,
+            author,
+            url,
+            source_id,
+            remark,
+        };
+        book.update_time = Date.now();
+        console.log(book);
+        return this.getConnection().then(connection => {
+            return new Promise((resolve, reject) => {
+                connection.query('INSERT INTO book SET ?', book, (err, results) => {
+                    connection.release(); // And done with the connection.
+                    if (err) {
+                        reject && reject(err);
+                    } else {
+                        resolve && resolve(results);
+                    }
+                })
+            });
+        });
+    },
 }
