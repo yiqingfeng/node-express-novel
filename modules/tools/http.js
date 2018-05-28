@@ -6,7 +6,7 @@ const http = require('http');
 const iconv = require('iconv-lite');
 const colors = require('./colors');
 
-exports.get = function (url, type = 'gb2312', max = 5) {
+module.exports.get = function (url, type = 'gb2312', max = 5) {
     return new Promise((resolve, reject) => {
         let i = 1;
         const get = () => {
